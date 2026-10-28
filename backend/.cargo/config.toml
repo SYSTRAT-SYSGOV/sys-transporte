@@ -1,0 +1,7 @@
+# Espelho do índice de crates para redes onde index.crates.io responde 503.
+# Remova este arquivo (ou ajuste a fonte) em ambientes com acesso direto ao crates.io.
+[source.crates-io]
+replace-with = "rsproxy-sparse"
+
+[source.rsproxy-sparse]
+registry = "sparse+https://rsproxy.cn/index/"

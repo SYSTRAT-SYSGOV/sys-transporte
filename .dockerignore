@@ -1,0 +1,10 @@
+# Contexto da API (raiz do repositório): só o backend e as migrations importam.
+backend/target
+backend/.cargo
+frontend
+openspec
+docs
+Transport
+.env
+.git
+*.md

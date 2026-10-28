@@ -1,0 +1,24 @@
+# Segredos e ambiente
+.env
+.env.local
+*.env
+
+# Rust
+backend/target/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/playwright-report/
+frontend/test-results/
+npm-debug.log*
+
+# Editores e sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Dados locais
+*.sqlite
+*.log

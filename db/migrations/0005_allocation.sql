@@ -1,0 +1,32 @@
+-- Alocação de estudantes ao transporte escolar
+
+CREATE TABLE transport_allocations (
+    id CHAR(36) CHARACTER SET ascii COLLATE ascii_general_ci PRIMARY KEY,
+    student_id CHAR(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+    enrollment_id CHAR(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+    route_id CHAR(36) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+    stop_id CHAR(36) CHARACTER SET ascii COLLATE ascii_general_ci NULL,
+    shift VARCHAR(20) NOT NULL,
+    uses_rural_transport BOOLEAN NOT NULL DEFAULT FALSE,
+    public_transport_jurisdiction TINYINT NULL,
+    special_needs_transport BOOLEAN NOT NULL DEFAULT FALSE,
+    special_needs_notes TEXT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NULL,
+    end_reason VARCHAR(255) NULL,
+    notes TEXT NULL,
+    active_key TINYINT GENERATED ALWAYS AS (IF(end_date IS NULL, 1, NULL)) STORED,
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    UNIQUE KEY uq_allocations_active (student_id, route_id, active_key),
+    KEY idx_allocations_route (route_id, end_date),
+    KEY idx_allocations_student (student_id),
+    KEY idx_allocations_enrollment (enrollment_id),
+    CONSTRAINT fk_allocations_student FOREIGN KEY (student_id) REFERENCES students (id) ON DELETE RESTRICT,
+    CONSTRAINT fk_allocations_enrollment FOREIGN KEY (enrollment_id) REFERENCES enrollments (id) ON DELETE RESTRICT,
+    CONSTRAINT fk_allocations_route FOREIGN KEY (route_id) REFERENCES transport_routes (id) ON DELETE RESTRICT,
+    CONSTRAINT fk_allocations_stop FOREIGN KEY (stop_id) REFERENCES transport_stops (id) ON DELETE SET NULL,
+    CONSTRAINT chk_allocations_shift CHECK (shift IN ('morning', 'afternoon', 'night', 'full_day')),
+    CONSTRAINT chk_allocations_jurisdiction CHECK (public_transport_jurisdiction IS NULL OR public_transport_jurisdiction IN (1, 2, 3)),
+    CONSTRAINT chk_allocations_dates CHECK (end_date IS NULL OR end_date >= start_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
